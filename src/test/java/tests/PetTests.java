@@ -80,4 +80,54 @@ public class PetTests extends BaseTest {
         ResponseModel responseModel = response.as(ResponseModel.class);
         Assert.assertEquals(responseModel.getMessage(), "Pet not found");
     }
+
+    @Test
+    public void testAddPet() {
+        Pet pet = TestDataGenerator.generatePet();
+        Response response = ApiUtils.post(EndpointHelper.ADD_PET, pet);
+        Assert.assertEquals(response.getStatusCode(), 200);
+        Pet responseBody = response.getBody().as(Pet.class);
+        Assert.assertEquals(responseBody.getName(), pet.getName());
+    }
+
+    @Test
+    public void testUpdatePet() {
+        Pet pet = TestDataGenerator.generatePet();
+        ApiUtils.post(EndpointHelper.ADD_PET, pet);
+        pet.setName("UpdatedName");
+        Response response = ApiUtils.put(EndpointHelper.UPDATE_PET, pet);
+        Assert.assertEquals(response.getStatusCode(), 200);
+        Pet responseBody = response.getBody().as(Pet.class);
+        Assert.assertEquals(responseBody.getName(), "UpdatedName");
+    }
+
+    @Test
+    public void testFindPetById() {
+        Pet pet = TestDataGenerator.generatePet();
+        ApiUtils.post(EndpointHelper.ADD_PET, pet);
+        Response response = ApiUtils.get(EndpointHelper.FIND_PET_BY_ID.replace("{petId}", String.valueOf(pet.getId())));
+        Assert.assertEquals(response.getStatusCode(), 200);
+        Pet responseBody = response.getBody().as(Pet.class);
+        Assert.assertEquals(responseBody.getId(), pet.getId());
+    }
+
+    @Test
+    public void testFindPetsByStatus() {
+        Pet pet = TestDataGenerator.generatePet();
+        ApiUtils.post(EndpointHelper.ADD_PET, pet);
+        Response response = ApiUtils.get(EndpointHelper.FIND_PETS_BY_STATUS + "?status=" + pet.getStatus());
+        Assert.assertEquals(response.getStatusCode(), 200);
+        Pet[] pets = response.getBody().as(Pet[].class);
+        Assert.assertTrue(pets.length > 0);
+    }
+
+    @Test
+    public void testDeletePetNew() {
+        Pet pet = TestDataGenerator.generatePet();
+        ApiUtils.post(EndpointHelper.ADD_PET, pet);
+        Response response = ApiUtils.delete(EndpointHelper.DELETE_PET.replace("{petId}", String.valueOf(pet.getId())));
+        Assert.assertEquals(response.getStatusCode(), 200);
+        Response getResponse = ApiUtils.get(EndpointHelper.FIND_PET_BY_ID.replace("{petId}", String.valueOf(pet.getId())));
+        Assert.assertEquals(getResponse.getStatusCode(), 404);
+    }
 }
