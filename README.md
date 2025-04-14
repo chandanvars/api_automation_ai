@@ -1,6 +1,46 @@
-# API Automation Framework
+# API Automation Framework for Swagger Petstore
 
-This framework is designed to automate API testing for the Petstore API, focusing on the Pet section endpoints.
+## Overview
+
+This framework is designed to automate the testing of the Pet Section endpoints in the Swagger Petstore using Java, Rest Assured, and TestNG.
+
+## Technologies Used
+
+- Java
+- Rest Assured
+- TestNG
+- Jackson
+- Log4j
+
+## Framework Structure
+
+```
+api_automation_ai/
+├── src/main/java/
+│   ├── base/
+│   │   └── BaseTest.java
+│   ├── config/
+│   │   └── ConfigReader.java
+│   ├── helpers/
+│   │   └── EndpointHelper.java
+│   └── models/
+│       ├── Pet.java
+│       ├── ResponseModel.java
+│       └── UploadResponse.java
+├── src/test/java/
+│   ├── tests/
+│   │   └── PetTests.java
+│   ├── utils/
+│   │   ├── TestDataGenerator.java
+│   │   └── ApiUtils.java
+├── config.properties
+├── pom.xml
+└── README.md
+```
+
+## Configuration
+
+The configuration settings are specified in the `config.properties` file. This includes the base URL for the API.
 
 ## Getting Started
 
@@ -29,7 +69,7 @@ $ cd api_automation_ai
 $ mvn install
 ```
 
-### Running Tests
+## Running Tests
 
 To run the tests, use the following command:
 
@@ -37,18 +77,15 @@ To run the tests, use the following command:
 $ mvn test
 ```
 
-## Project Structure
+## Test Cases
 
-- **src/main/java/**: Contains the main Java files.
-  - **base/**: Contains the base test class.
-  - **config/**: Contains configuration utilities.
-  - **helpers/**: Contains helper utilities for endpoints.
-  - **models/**: Contains POJO classes for API requests and responses.
-- **src/test/java/**: Contains the test classes and utilities.
-  - **tests/**: Contains the test cases.
-  - **utils/**: Contains utility classes for tests.
-- **config.properties**: Configuration file for the framework.
-- **pom.xml**: Maven configuration file.
+The test cases are automated for the following endpoints:
+1. Add a new pet (POST /pet)
+2. Update an existing pet (PUT /pet)
+3. Find a pet by ID (GET /pet/{petId})
+4. Find pets by status (GET /pet/findByStatus)
+5. Update pet information via form data (POST /pet/{petId})
+6. Delete a pet (DELETE /pet/{petId})
 
 ## Extending the Framework
 
