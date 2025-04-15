@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.1.0</version> <!-- Update to the latest version -->
+            <version>4.12.1</version> <!-- Update to the latest version -->
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>4.2.2</version>
+            <version>5.5.3</version>
         </dependency>
     </dependencies>
 

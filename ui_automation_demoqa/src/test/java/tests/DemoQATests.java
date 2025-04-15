@@ -12,7 +12,7 @@ public class DemoQATests extends BaseTest {
     public void testTextBox(String fullName, String email, String currentAddress, String permanentAddress) {
         HomePage homePage = new HomePage(driver);
         homePage.clickOnElementsCard();
-
+        homePage.clickOnTextBoxElement();
         TextBoxPage textBoxPage = new TextBoxPage(driver);
         textBoxPage.enterFullName(fullName);
         textBoxPage.enterEmail(email);
@@ -27,7 +27,7 @@ public class DemoQATests extends BaseTest {
     public void testButtonClick() {
         HomePage homePage = new HomePage(driver);
         homePage.clickOnElementsCard();
-
+        homePage.clickOnButtonsElement();
         ButtonsPage buttonsPage = new ButtonsPage(driver);
         buttonsPage.doubleClickButton();
 
@@ -38,7 +38,7 @@ public class DemoQATests extends BaseTest {
     public void testCheckBox() {
         HomePage homePage = new HomePage(driver);
         homePage.clickOnElementsCard();
-
+        homePage.clickOnCheckBoxElement();
         CheckBoxPage checkBoxPage = new CheckBoxPage(driver);
         checkBoxPage.expandAll();
         checkBoxPage.selectHomeCheckBox();
@@ -50,7 +50,7 @@ public class DemoQATests extends BaseTest {
     public void testRadioButton() {
         HomePage homePage = new HomePage(driver);
         homePage.clickOnElementsCard();
-
+        homePage.clickOnRadioButtonElement();
         RadioButtonPage radioButtonPage = new RadioButtonPage(driver);
         radioButtonPage.selectYesRadioButton();
 
@@ -61,7 +61,7 @@ public class DemoQATests extends BaseTest {
     public void testAlert() {
         HomePage homePage = new HomePage(driver);
         homePage.clickOnElementsCard();
-
+        homePage.clickOnAlertsFrameWindowsCard();
         AlertsPage alertsPage = new AlertsPage(driver);
         alertsPage.clickAlertButton();
 
@@ -75,7 +75,7 @@ public class DemoQATests extends BaseTest {
     public void testWebTable() {
         HomePage homePage = new HomePage(driver);
         homePage.clickOnElementsCard();
-
+        homePage.clickOnWebTablesElement();
         WebTablePage webTablePage = new WebTablePage(driver);
         webTablePage.clickAddButton();
         webTablePage.enterFirstName("John");
@@ -93,7 +93,7 @@ public class DemoQATests extends BaseTest {
     public void testDynamicProperties() throws InterruptedException {
         HomePage homePage = new HomePage(driver);
         homePage.clickOnElementsCard();
-
+        homePage.clickOnDynamicPropertiesElement();
         DynamicPropertiesPage dynamicPropertiesPage = new DynamicPropertiesPage(driver);
         Thread.sleep(5000); // Wait for 5 seconds for the button to become clickable
 
