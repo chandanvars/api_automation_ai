@@ -1,0 +1,1 @@
+package base;\n\nimport io.restassured.RestAssured;\nimport org.junit.BeforeClass;\n\npublic class BaseTest {\n\n    @BeforeClass\n    public static void setup() {\n        RestAssured.baseURI = ConfigReader.getProperty(\"baseUrl\");\n    }\n}
