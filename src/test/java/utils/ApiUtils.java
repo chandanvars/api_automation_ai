@@ -2,6 +2,9 @@ package utils;
 
 import io.restassured.response.Response;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.equalTo;
 import helpers.EndpointHelper;
 import models.Pet;
 
@@ -41,5 +44,13 @@ public class ApiUtils {
                 .pathParam("petId", petId)
                 .when()
                 .delete(EndpointHelper.DELETE_PET);
+    }
+
+    public static void validateStatusCode(Response response, int expectedStatusCode) {
+        assertThat("Status code validation failed", response.getStatusCode(), equalTo(expectedStatusCode));
+    }
+
+    public static void validateResponseTime(Response response, long maxResponseTimeMillis) {
+        assertThat("Response time validation failed", response.getTime(), lessThan(maxResponseTimeMillis));
     }
 }
