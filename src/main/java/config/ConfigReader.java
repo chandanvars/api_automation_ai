@@ -89,4 +89,71 @@ public class ConfigReader {
         }
         return browser;
     }
+
+    /**
+     * Retrieves the property value as a double for the given key.
+     * Throws RuntimeException if the value is not a valid double.
+     * 
+     * @param key the property key
+     * @return the double property value
+     */
+    public static double getDoubleProperty(String key) {
+        String value = properties.getProperty(key);
+        if (value == null) {
+            throw new RuntimeException("Property '" + key + "' not found.");
+        }
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Property '" + key + "' is not a valid double.", e);
+        }
+    }
+
+    /**
+     * Retrieves the property value as a long for the given key.
+     * Throws RuntimeException if the value is not a valid long.
+     * 
+     * @param key the property key
+     * @return the long property value
+     */
+    public static long getLongProperty(String key) {
+        String value = properties.getProperty(key);
+        if (value == null) {
+            throw new RuntimeException("Property '" + key + "' not found.");
+        }
+        try {
+            return Long.parseLong(value);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Property '" + key + "' is not a valid long.", e);
+        }
+    }
+
+    /**
+     * Retrieves the property value as a float for the given key.
+     * Throws RuntimeException if the value is not a valid float.
+     * 
+     * @param key the property key
+     * @return the float property value
+     */
+    public static float getFloatProperty(String key) {
+        String value = properties.getProperty(key);
+        if (value == null) {
+            throw new RuntimeException("Property '" + key + "' not found.");
+        }
+        try {
+            return Float.parseFloat(value);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Property '" + key + "' is not a valid float.", e);
+        }
+    }
+
+    /**
+     * Checks if a property exists in the configuration file.
+     * 
+     * @param key the property key
+     * @return true if the property exists, false otherwise
+     */
+    public static boolean hasProperty(String key) {
+        return properties.containsKey(key);
+    }
 }
