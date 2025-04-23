@@ -14,6 +14,10 @@ public class HomePage {
     private By alertsFrameWindowsCard = By.xpath("//div[@class='card-body']/h5[text()='Alerts, Frame & Windows']/ancestor::div[@class='card mt-4 top-card']");
     // Locator for Widgets card on the home page
     private By widgetsCard = By.xpath("//div[@class='card-body']/h5[text()='Widgets']/ancestor::div[@class='card mt-4 top-card']");
+    // Locator for Interactions card on the home page
+    private By interactionsCard = By.xpath("//div[@class='card-body']/h5[text()='Interactions']/ancestor::div[@class='card mt-4 top-card']");
+    // Locator for Book Store Application card on the home page
+    private By bookStoreAppCard = By.xpath("//div[@class='card-body']/h5[text()='Book Store Application']/ancestor::div[@class='card mt-4 top-card']");
 
     public HomePage(WebDriver driver) {
         this.driver = driver;
@@ -45,5 +49,19 @@ public class HomePage {
      */
     public void clickWidgetsCard() {
         driver.findElement(widgetsCard).click();
+    }
+
+    /**
+     * Clicks on the Interactions card to navigate to Interactions section.
+     */
+    public void clickInteractionsCard() {
+        driver.findElement(interactionsCard).click();
+    }
+
+    /**
+     * Clicks on the Book Store Application card to navigate to Book Store section.
+     */
+    public void clickBookStoreAppCard() {
+        driver.findElement(bookStoreAppCard).click();
     }
 }
