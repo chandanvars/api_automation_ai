@@ -68,7 +68,6 @@
             <artifactId>webdrivermanager</artifactId>
             <version>${webdrivermanager.version}</version>
         </dependency>
-
     </dependencies>
 
     <build>
