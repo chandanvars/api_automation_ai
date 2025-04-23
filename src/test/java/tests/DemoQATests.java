@@ -52,7 +52,28 @@ public class DemoQATests extends BaseTest {
         Assert.assertFalse(isEmailValid, "Email field should be invalid for incorrect email format");
     }
 
-    @Test(description = "Verify JavaScript alerts accept and dismiss")
+    @Test(description = "Verify Buttons: double click, right click, and dynamic click")
+    public void testButtons() {
+        driver.get(ConfigReader.getProperty("baseUrl") + "/buttons");
+        ButtonsPage buttonsPage = new ButtonsPage(driver, wait);
+
+        // Double click button test
+        buttonsPage.doubleClickButton();
+        String doubleClickMessage = buttonsPage.getDoubleClickMessage();
+        Assert.assertEquals(doubleClickMessage, "You have done a double click", "Double click message should be correct");
+
+        // Right click button test
+        buttonsPage.rightClickButton();
+        String rightClickMessage = buttonsPage.getRightClickMessage();
+        Assert.assertEquals(rightClickMessage, "You have done a right click", "Right click message should be correct");
+
+        // Dynamic click button test (normal click)
+        buttonsPage.dynamicClickButton();
+        String dynamicClickMessage = buttonsPage.getDynamicClickMessage();
+        Assert.assertEquals(dynamicClickMessage, "You have done a dynamic click", "Dynamic click message should be correct");
+    }
+
+    @Test(description = "Verify JavaScript alerts: accept, dismiss, and prompt")
     public void testAlerts() {
         driver.get(ConfigReader.getProperty("baseUrl") + "/alerts");
         AlertsPage alertsPage = new AlertsPage(driver, wait);
@@ -60,21 +81,35 @@ public class DemoQATests extends BaseTest {
         // Simple alert
         alertsPage.clickAlertButton();
         Alert alert = alertsPage.switchToAlert();
-        Assert.assertEquals(alert.getText(), "You clicked a button");
+        Assert.assertEquals(alert.getText(), "You clicked a button", "Alert text should be 'You clicked a button'");
         alert.accept();
 
         // Confirm alert accept
         alertsPage.clickConfirmButton();
         alert = alertsPage.switchToAlert();
-        Assert.assertEquals(alert.getText(), "Do you confirm action?");
+        Assert.assertEquals(alert.getText(), "Do you confirm action?", "Confirm alert text should be 'Do you confirm action?'");
         alert.accept();
-        Assert.assertEquals(alertsPage.getConfirmResultText(), "You selected Ok");
+        Assert.assertEquals(alertsPage.getConfirmResultText(), "You selected Ok", "Confirm result should be 'You selected Ok'");
 
         // Confirm alert dismiss
         alertsPage.clickConfirmButton();
         alert = alertsPage.switchToAlert();
         alert.dismiss();
-        Assert.assertEquals(alertsPage.getConfirmResultText(), "You selected Cancel");
+        Assert.assertEquals(alertsPage.getConfirmResultText(), "You selected Cancel", "Confirm result should be 'You selected Cancel'");
+
+        // Prompt alert (enter text, accept)
+        alertsPage.clickPromptButton();
+        alert = alertsPage.switchToAlert();
+        String promptInput = "TestUser";
+        alert.sendKeys(promptInput);
+        alert.accept();
+        Assert.assertTrue(alertsPage.getPromptResultText().contains(promptInput), "Prompt result should contain the entered text");
+
+        // Prompt alert (dismiss)
+        alertsPage.clickPromptButton();
+        alert = alertsPage.switchToAlert();
+        alert.dismiss();
+        Assert.assertEquals(alertsPage.getPromptResultText(), "You entered null", "Prompt result should indicate null after dismiss");
     }
 
     @Test(dataProvider = "sliderValues", dataProviderClass = DataProviderUtil.class, description = "Verify slider widget interaction")
@@ -131,6 +166,7 @@ public class DemoQATests extends BaseTest {
             Thread.sleep(5000); // 5 seconds delay
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            Assert.fail("Thread was interrupted during simulated network delay");
         }
 
         TextBoxPage textBoxPage = new TextBoxPage(driver, wait);
