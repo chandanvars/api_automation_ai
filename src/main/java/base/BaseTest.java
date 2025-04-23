@@ -34,6 +34,25 @@ public class BaseTest {
      */
     @BeforeMethod(alwaysRun = true)
     public void setUp() {
+        initializeWebDriver();
+    }
+
+    /**
+     * Tears down the WebDriver after each test method.
+     * Takes a screenshot if the test failed.
+     *
+     * @param result The ITestResult containing test method result info.
+     */
+    @AfterMethod(alwaysRun = true)
+    public void tearDown(ITestResult result) {
+        handleTestResult(result);
+        closeWebDriver();
+    }
+
+    /**
+     * Initializes the WebDriver based on the provided browser configuration.
+     */
+    private void initializeWebDriver() {
         try {
             String browser = ConfigReader.getProperty("browser").toLowerCase();
             switch (browser) {
@@ -67,7 +86,7 @@ public class BaseTest {
             driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(ConfigReader.getIntProperty("pageLoadTimeout")));
 
             // Initialize explicit wait
-            wait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getIntProperty("implicitWait")));
+            wait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getIntProperty("explicitWait")));
 
             logger.info("WebDriver initialized for browser: " + browser);
         } catch (Exception e) {
@@ -77,29 +96,30 @@ public class BaseTest {
     }
 
     /**
-     * Tears down the WebDriver after each test method.
-     * Takes a screenshot if the test failed.
+     * Handles the result of a test method and captures a screenshot if the test failed.
      *
      * @param result The ITestResult containing test method result info.
      */
-    @AfterMethod(alwaysRun = true)
-    public void tearDown(ITestResult result) {
+    private void handleTestResult(ITestResult result) {
         try {
-            // Capture screenshot on test failure
             if (result.getStatus() == ITestResult.FAILURE) {
                 captureScreenshot(result.getMethod().getMethodName());
             }
         } catch (Exception e) {
-            logger.error("Error occurred while capturing screenshot: ", e);
-        } finally {
-            // Quit WebDriver instance if it exists
-            if (driver != null) {
-                try {
-                    driver.quit();
-                    logger.info("WebDriver closed.");
-                } catch (Exception e) {
-                    logger.error("Error occurred while closing WebDriver: ", e);
-                }
+            logger.error("Error occurred while handling test result: ", e);
+        }
+    }
+
+    /**
+     * Closes the WebDriver instance if it exists.
+     */
+    private void closeWebDriver() {
+        if (driver != null) {
+            try {
+                driver.quit();
+                logger.info("WebDriver closed.");
+            } catch (Exception e) {
+                logger.error("Error occurred while closing WebDriver: ", e);
             }
         }
     }
