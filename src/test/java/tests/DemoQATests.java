@@ -47,7 +47,6 @@ public class DemoQATests extends BaseTest {
         textBoxPage.enterCurrentAddress(currentAddress);
         textBoxPage.enterPermanentAddress(permanentAddress);
 
-        // Submit button should be enabled but email validation is client side, so check email field validity
         boolean isEmailValid = (Boolean) ((JavascriptExecutor) driver).executeScript("return arguments[0].checkValidity();", driver.findElement(By.id("userEmail")));
         Assert.assertFalse(isEmailValid, "Email field should be invalid for incorrect email format");
     }
@@ -57,17 +56,14 @@ public class DemoQATests extends BaseTest {
         driver.get(ConfigReader.getProperty("baseUrl") + "/buttons");
         ButtonsPage buttonsPage = new ButtonsPage(driver, wait);
 
-        // Double click button test
         buttonsPage.doubleClickButton();
         String doubleClickMessage = buttonsPage.getDoubleClickMessage();
         Assert.assertEquals(doubleClickMessage, "You have done a double click", "Double click message should be correct");
 
-        // Right click button test
         buttonsPage.rightClickButton();
         String rightClickMessage = buttonsPage.getRightClickMessage();
         Assert.assertEquals(rightClickMessage, "You have done a right click", "Right click message should be correct");
 
-        // Dynamic click button test (normal click)
         buttonsPage.dynamicClickButton();
         String dynamicClickMessage = buttonsPage.getDynamicClickMessage();
         Assert.assertEquals(dynamicClickMessage, "You have done a dynamic click", "Dynamic click message should be correct");
@@ -78,26 +74,22 @@ public class DemoQATests extends BaseTest {
         driver.get(ConfigReader.getProperty("baseUrl") + "/alerts");
         AlertsPage alertsPage = new AlertsPage(driver, wait);
 
-        // Simple alert
         alertsPage.clickAlertButton();
         Alert alert = alertsPage.switchToAlert();
         Assert.assertEquals(alert.getText(), "You clicked a button", "Alert text should be 'You clicked a button'");
         alert.accept();
 
-        // Confirm alert accept
         alertsPage.clickConfirmButton();
         alert = alertsPage.switchToAlert();
         Assert.assertEquals(alert.getText(), "Do you confirm action?", "Confirm alert text should be 'Do you confirm action?'");
         alert.accept();
         Assert.assertEquals(alertsPage.getConfirmResultText(), "You selected Ok", "Confirm result should be 'You selected Ok'");
 
-        // Confirm alert dismiss
         alertsPage.clickConfirmButton();
         alert = alertsPage.switchToAlert();
         alert.dismiss();
         Assert.assertEquals(alertsPage.getConfirmResultText(), "You selected Cancel", "Confirm result should be 'You selected Cancel'");
 
-        // Prompt alert (enter text, accept)
         alertsPage.clickPromptButton();
         alert = alertsPage.switchToAlert();
         String promptInput = "TestUser";
@@ -105,7 +97,6 @@ public class DemoQATests extends BaseTest {
         alert.accept();
         Assert.assertTrue(alertsPage.getPromptResultText().contains(promptInput), "Prompt result should contain the entered text");
 
-        // Prompt alert (dismiss)
         alertsPage.clickPromptButton();
         alert = alertsPage.switchToAlert();
         alert.dismiss();
@@ -119,7 +110,6 @@ public class DemoQATests extends BaseTest {
 
         widgetsPage.moveSliderTo(value);
 
-        // Validate slider value by checking the input value attribute
         String sliderValue = driver.findElement(By.id("sliderValue")).getAttribute("value");
         Assert.assertEquals(Integer.parseInt(sliderValue), value, "Slider value should match the set value");
     }
@@ -161,9 +151,8 @@ public class DemoQATests extends BaseTest {
     @Test(description = "Simulate network delay and verify UI handles it gracefully")
     public void testNetworkDelayHandling() {
         driver.get(ConfigReader.getProperty("baseUrl") + "/text-box");
-        // Simulate network delay by waiting artificially
         try {
-            Thread.sleep(5000); // 5 seconds delay
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             Assert.fail("Thread was interrupted during simulated network delay");
@@ -171,5 +160,35 @@ public class DemoQATests extends BaseTest {
 
         TextBoxPage textBoxPage = new TextBoxPage(driver, wait);
         Assert.assertTrue(textBoxPage.isSubmitButtonEnabled(), "Submit button should be enabled after delay");
+    }
+
+    @Test(description = "Verify selectable list functionality")
+    public void testSelectableList() {
+        driver.get(ConfigReader.getProperty("baseUrl") + "/selectable");
+        SelectablePage selectablePage = new SelectablePage(driver, wait);
+
+        selectablePage.selectListItem("Cras justo odio");
+        Assert.assertTrue(selectablePage.isListItemSelected("Cras justo odio"), "List item should be selected");
+
+        selectablePage.selectListItem("Dapibus ac facilisis in");
+        Assert.assertTrue(selectablePage.isListItemSelected("Dapibus ac facilisis in"), "List item should be selected");
+    }
+
+    @Test(description = "Verify droppable functionality")
+    public void testDroppable() {
+        driver.get(ConfigReader.getProperty("baseUrl") + "/droppable");
+        DroppablePage droppablePage = new DroppablePage(driver, wait);
+
+        droppablePage.dragAndDrop();
+        Assert.assertTrue(droppablePage.isDropped(), "Element should be dropped successfully");
+    }
+
+    @Test(description = "Verify dynamic properties functionality")
+    public void testDynamicProperties() {
+        driver.get(ConfigReader.getProperty("baseUrl") + "/dynamic-properties");
+        DynamicPropertiesPage dynamicPropertiesPage = new DynamicPropertiesPage(driver, wait);
+
+        Assert.assertTrue(dynamicPropertiesPage.isButtonEnabledAfterDelay(), "Button should be enabled after delay");
+        Assert.assertTrue(dynamicPropertiesPage.isButtonColorChanged(), "Button color should change after delay");
     }
 }
