@@ -21,34 +21,39 @@ public class WebDriverFactory {
         WebDriver driver;
         switch (browser) {
             case "chrome":
-                WebDriverManager.chromedriver().setup();
-                ChromeOptions chromeOptions = new ChromeOptions();
-                if (ConfigReader.getBooleanProperty("headless")) {
-                    chromeOptions.addArguments("--headless=new");
-                }
-                driver = new ChromeDriver(chromeOptions);
+                driver = setupChromeDriver();
                 break;
             case "firefox":
-                WebDriverManager.firefoxdriver().setup();
-                FirefoxOptions firefoxOptions = new FirefoxOptions();
-                if (ConfigReader.getBooleanProperty("headless")) {
-                    firefoxOptions.addArguments("-headless");
-                }
-                driver = new FirefoxDriver(firefoxOptions);
+                driver = setupFirefoxDriver();
                 break;
             default:
                 logger.warn("Unsupported browser '{}', falling back to Chrome.", browser);
-                WebDriverManager.chromedriver().setup();
-                ChromeOptions defaultOptions = new ChromeOptions();
-                if (ConfigReader.getBooleanProperty("headless")) {
-                    defaultOptions.addArguments("--headless=new");
-                }
-                driver = new ChromeDriver(defaultOptions);
+                driver = setupChromeDriver();
                 break;
         }
         driver.manage().window().maximize();
         int implicitWaitSeconds = ConfigReader.getIntProperty("implicitWait", 10);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWaitSeconds));
         return driver;
+    }
+
+    private static WebDriver setupChromeDriver() {
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions chromeOptions = new ChromeOptions();
+        if (ConfigReader.getBooleanProperty("headless")) {
+            chromeOptions.addArguments("--headless=new");
+        }
+        logger.info("Setting up ChromeDriver with options: {}", chromeOptions.toString());
+        return new ChromeDriver(chromeOptions);
+    }
+
+    private static WebDriver setupFirefoxDriver() {
+        WebDriverManager.firefoxdriver().setup();
+        FirefoxOptions firefoxOptions = new FirefoxOptions();
+        if (ConfigReader.getBooleanProperty("headless")) {
+            firefoxOptions.addArguments("-headless");
+        }
+        logger.info("Setting up FirefoxDriver with options: {}", firefoxOptions.toString());
+        return new FirefoxDriver(firefoxOptions);
     }
 }
