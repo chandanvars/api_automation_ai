@@ -2,6 +2,7 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -21,19 +22,44 @@ public class WidgetsPage {
         this.actions = new Actions(driver);
     }
 
+    /**
+     * Moves the slider to the specified value.
+     * Assumes slider range is from 0 to 100.
+     *
+     * @param value target value to move the slider to
+     */
     public void moveSliderTo(int value) {
-        // Slider range is 0 to 100
-        int width = driver.findElement(slider).getSize().width;
-        int xOffset = (int) (width * (value / 100.0));
-        actions.clickAndHold(driver.findElement(slider)).moveByOffset(xOffset - width / 2, 0).release().perform();
+        // Wait for slider to be visible and enabled
+        WebElement sliderElement = wait.until(ExpectedConditions.elementToBeClickable(slider));
+        int width = sliderElement.getSize().width;
+
+        // Calculate x offset relative to slider center
+        int xOffset = (int) (width * (value / 100.0)) - width / 2;
+
+        // Perform click and drag to move the slider
+        actions.clickAndHold(sliderElement)
+                .moveByOffset(xOffset, 0)
+                .release()
+                .perform();
     }
 
+    /**
+     * Hovers over the tooltip button to reveal the tooltip.
+     */
     public void hoverTooltipButton() {
-        actions.moveToElement(driver.findElement(tooltipButton)).perform();
+        // Wait until tooltip button is visible
+        WebElement button = wait.until(ExpectedConditions.visibilityOfElementLocated(tooltipButton));
+        actions.moveToElement(button).perform();
     }
 
+    /**
+     * Retrieves the text from the tooltip.
+     *
+     * @return tooltip text string
+     */
     public String getTooltipText() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(tooltipText));
-        return driver.findElement(tooltipText).getText();
+        // Wait until tooltip text is visible
+        WebElement tooltip = wait.until(ExpectedConditions.visibilityOfElementLocated(tooltipText));
+        return tooltip.getText();
     }
 }
